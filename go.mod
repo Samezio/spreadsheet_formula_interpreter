@@ -1,3 +1,3 @@
-module github.com/samezio/spreadsheet_formula_interpreter
+module github.com/Samezio/spreadsheet_formula_interpreter
 
 go 1.22.3

@@ -23,3 +23,7 @@ func (ast *String_AST) ValueAsFloat() (float64, error) {
 func (ast *String_AST) ValueAsString() (string, error) {
 	return ast.value, nil
 }
+
+func NewStringData(value string) Data {
+	return &String_AST{value: value}
+}

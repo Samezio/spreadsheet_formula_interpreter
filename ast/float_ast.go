@@ -21,3 +21,7 @@ func (ast *Float_AST) ValueAsFloat() (float64, error) {
 func (ast *Float_AST) ValueAsString() (string, error) {
 	return fmt.Sprintf("%f", ast.value), nil
 }
+
+func NewFloatData(value float64) Data {
+	return &Float_AST{value: value}
+}

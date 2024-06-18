@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/samezio/spreadsheet_formula_interpreter/ast"
-	"github.com/samezio/spreadsheet_formula_interpreter/interpreter"
+	"github.com/Samezio/spreadsheet_formula_interpreter/ast"
+	"github.com/Samezio/spreadsheet_formula_interpreter/interpreter"
 )
 
 func main() {

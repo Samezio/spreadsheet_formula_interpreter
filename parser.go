@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/samezio/spreadsheet_formula_interpreter/ast"
+	"github.com/Samezio/spreadsheet_formula_interpreter/ast"
 )
 
 func Parse(expression string) (ast.AST, error) {

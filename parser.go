@@ -24,7 +24,11 @@ type parseState struct {
 func (p *parseState) ParseExpression() (ast.AST, error) {
 	return p.parseTerm2()
 }
-
+func (p *parseState) skipWhiteSpaces() {
+	for p.currentLex != nil && p.currentLex.Type == SPECIAL_LEX && p.currentLex.Token == " " {
+		p.currentLex = p.lexer()
+	}
+}
 func (p *parseState) consume(ttype string) error {
 	if p.currentLex == nil {
 		return fmt.Errorf("expected %s, got EOF", ttype)
@@ -33,6 +37,8 @@ func (p *parseState) consume(ttype string) error {
 		return fmt.Errorf("expected %s, but got %s", ttype, p.currentLex.Type)
 	}
 	p.currentLex = p.lexer()
+	p.skipWhiteSpaces()
+
 	return nil
 }
 func (p *parseState) parseTerm2() (ast.AST, error) {

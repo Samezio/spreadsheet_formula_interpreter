@@ -14,6 +14,7 @@ type Data interface {
 	ValueAsInt() (int, error)
 	ValueAsFloat() (float64, error)
 	ValueAsString() (string, error)
+	ValueAsBoolean() (bool, error)
 }
 
 var empty_children = []AST{}
@@ -30,6 +31,10 @@ func NewValueAST(value any) (AST, error) {
 		}, nil
 	case string:
 		return &String_AST{
+			value: v,
+		}, nil
+	case bool:
+		return &Boolean_AST{
 			value: v,
 		}, nil
 	default:

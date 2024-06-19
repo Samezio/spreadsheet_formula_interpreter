@@ -21,6 +21,9 @@ func (ast *Integer_AST) ValueAsFloat() (float64, error) {
 func (ast *Integer_AST) ValueAsString() (string, error) {
 	return fmt.Sprintf("%d", ast.value), nil
 }
+func (ast *Integer_AST) ValueAsBoolean() (bool, error) {
+	return ast.value > 0, nil
+}
 
 func NewIntegerData(value int) Data {
 	return &Integer_AST{value: value}

@@ -1,7 +1,9 @@
 package ast
 
 import (
+	"fmt"
 	"strconv"
+	"strings"
 )
 
 type String_AST struct {
@@ -22,6 +24,16 @@ func (ast *String_AST) ValueAsFloat() (float64, error) {
 }
 func (ast *String_AST) ValueAsString() (string, error) {
 	return ast.value, nil
+}
+func (ast *String_AST) ValueAsBoolean() (bool, error) {
+	t := strings.ToUpper(ast.value)
+	if t == "TRUE" {
+		return true, nil
+	} else if t == "FALSE" {
+		return false, nil
+	} else {
+		return false, fmt.Errorf("can't be converted to boolean")
+	}
 }
 
 func NewStringData(value string) Data {

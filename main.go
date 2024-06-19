@@ -1,59 +1,30 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"os"
 
-	"github.com/Samezio/spreadsheet_formula_interpreter/ast"
 	"github.com/Samezio/spreadsheet_formula_interpreter/interpreter"
 )
 
 func main() {
+	scanner := bufio.NewScanner(os.Stdin)
+
 	basic_interpreter := interpreter.Interpreter{}
-	expression := "Hello World && Lexer"
-	lexer := NewLexer(expression)
-	lex := lexer()
-	for lex != nil {
-		fmt.Println(lex)
-		lex = lexer()
-	}
-
-	//Test 2
-	expression = "4-1.5 * 10 + 10 / 100"
-	lexer = NewLexer(expression)
-	lex = lexer()
-	for lex != nil {
-		fmt.Println(lex)
-		lex = lexer()
-	}
-	if a, err := Parse(expression); err != nil {
-		panic(err)
-	} else {
-		fmt.Println(ast.AST_ToString(a, 0))
-		if data, err := basic_interpreter.Interpret(a); err != nil {
-			panic(err)
-		} else {
-			fmt.Printf("Result: %v\n", data.Value())
-
+	fmt.Print(">>")
+	for scanner.Scan() {
+		exp := scanner.Text()
+		if exp == "exit" {
+			break
 		}
-	}
-
-	//Test 3
-	expression = "4-1.5*(10+10)/100"
-	lexer = NewLexer(expression)
-	lex = lexer()
-	for lex != nil {
-		fmt.Println(lex)
-		lex = lexer()
-	}
-	if a, err := Parse(expression); err != nil {
-		panic(err)
-	} else {
-		fmt.Println(ast.AST_ToString(a, 0))
-		if data, err := basic_interpreter.Interpret(a); err != nil {
-			panic(err)
+		if a, err := Parse(exp); err != nil {
+			fmt.Println(err)
+		} else if data, err := basic_interpreter.Interpret(a); err != nil {
+			fmt.Println(err)
 		} else {
-			fmt.Printf("Result: %v\n", data.Value())
-
+			fmt.Println(data.Value())
 		}
+		fmt.Print(">>")
 	}
 }

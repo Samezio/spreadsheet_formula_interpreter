@@ -19,6 +19,20 @@ func (i *Interpreter) Interpret(node ast.AST) (ast.Data, error) {
 	switch v := node.(type) {
 	case ast.Data:
 		return v, nil
+	case *ast.UnaryOperator_AST:
+		if operand, err := i.Interpret(v.Operand); err != nil {
+			return nil, err
+		} else if operand == nil {
+			return nil, fmt.Errorf("operand node of unary operation is nil")
+		} else if value, err := operand.ValueAsFloat(); err != nil {
+			return nil, err
+		} else {
+			value = value * (-1)
+			if value-math.Trunc(value) != 0 {
+				return ast.NewFloatData(value), nil
+			}
+			return ast.NewIntegerData(int(value)), nil
+		}
 	case *ast.BinaryOperator_AST:
 		if left, err := i.Interpret(v.Left); err != nil {
 			return nil, err

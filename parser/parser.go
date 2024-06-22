@@ -113,7 +113,7 @@ func (p *parseState) parseTerm2() (ast.AST, error) {
 	return left, nil
 }
 func (p *parseState) parseTerm1() (ast.AST, error) {
-	left, err := p.factor()
+	left, err := p.unaryOperator()
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +123,7 @@ func (p *parseState) parseTerm1() (ast.AST, error) {
 		if err != nil {
 			return nil, err
 		}
-		right, err := p.factor()
+		right, err := p.unaryOperator()
 		if err != nil {
 			return nil, err
 		}
@@ -134,6 +134,24 @@ func (p *parseState) parseTerm1() (ast.AST, error) {
 		}
 	}
 	return left, nil
+}
+func (p *parseState) unaryOperator() (ast.AST, error) {
+	if p.currentToken == nil {
+		return nil, nil
+	}
+	if p.currentToken.Type == SPECIAL && p.currentToken.Token == "-" { //Negation
+		if err := p.consume(SPECIAL); err != nil {
+			return nil, err
+		} else if operand, err := p.factor(); err != nil {
+			return nil, err
+		} else {
+			return &ast.UnaryOperator_AST{
+				Operator: "-",
+				Operand:  operand,
+			}, nil
+		}
+	}
+	return p.factor()
 }
 func (p *parseState) factor() (ast.AST, error) {
 	if p.currentToken == nil {

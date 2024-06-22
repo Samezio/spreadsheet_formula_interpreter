@@ -51,6 +51,19 @@ func main() {
 
 		}
 	}
+	//Test 5
+	expression = "4-1.5 * 10 + 10 / 100 == -10.9"
+	if a, err := parser.Parse(expression); err != nil {
+		panic(err)
+	} else {
+		fmt.Println(ast.AST_ToString(a, 0))
+		if data, err := basic_interpreter.Interpret(a); err != nil {
+			panic(err)
+		} else {
+			fmt.Printf("Result: %v\n", data.Value())
+
+		}
+	}
 	/*scanner := bufio.NewScanner(os.Stdin)
 
 	basic_interpreter := interpreter.Interpreter{}

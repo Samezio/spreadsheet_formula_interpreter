@@ -28,21 +28,89 @@ func (i *Interpreter) Interpret(node ast.AST) (ast.Data, error) {
 			return nil, fmt.Errorf("left node of binary operation is nil")
 		} else if right == nil {
 			return nil, fmt.Errorf("right node of binary operation is nil")
-		} else if left_val, err := left.ValueAsFloat(); err != nil {
-			return nil, err
-		} else if right_val, err := right.ValueAsFloat(); err != nil {
-			return nil, err
 		} else {
 			result := 0.0
 			switch v.Operator {
 			case "+":
-				result = left_val + right_val
+				if left_val, err := left.ValueAsFloat(); err != nil {
+					return nil, err
+				} else if right_val, err := right.ValueAsFloat(); err != nil {
+					return nil, err
+				} else {
+					result = left_val + right_val
+				}
 			case "-":
-				result = left_val - right_val
+				if left_val, err := left.ValueAsFloat(); err != nil {
+					return nil, err
+				} else if right_val, err := right.ValueAsFloat(); err != nil {
+					return nil, err
+				} else {
+					result = left_val - right_val
+				}
 			case "*":
-				result = left_val * right_val
+				if left_val, err := left.ValueAsFloat(); err != nil {
+					return nil, err
+				} else if right_val, err := right.ValueAsFloat(); err != nil {
+					return nil, err
+				} else {
+					result = left_val * right_val
+				}
 			case "/":
-				result = left_val / right_val
+				if left_val, err := left.ValueAsFloat(); err != nil {
+					return nil, err
+				} else if right_val, err := right.ValueAsFloat(); err != nil {
+					return nil, err
+				} else {
+					result = left_val / right_val
+				}
+			case "==":
+				if left_val, err := left.ValueAsFloat(); err != nil {
+					return nil, err
+				} else if right_val, err := right.ValueAsFloat(); err != nil {
+					return nil, err
+				} else {
+					return ast.NewBooleanData(left_val == right_val), nil
+				}
+			case ">=":
+				if left_val, err := left.ValueAsFloat(); err != nil {
+					return nil, err
+				} else if right_val, err := right.ValueAsFloat(); err != nil {
+					return nil, err
+				} else {
+					return ast.NewBooleanData(left_val >= right_val), nil
+				}
+			case "<=":
+				if left_val, err := left.ValueAsFloat(); err != nil {
+					return nil, err
+				} else if right_val, err := right.ValueAsFloat(); err != nil {
+					return nil, err
+				} else {
+					return ast.NewBooleanData(left_val <= right_val), nil
+				}
+			case "!=":
+				if left_val, err := left.ValueAsFloat(); err != nil {
+					return nil, err
+				} else if right_val, err := right.ValueAsFloat(); err != nil {
+					return nil, err
+				} else {
+					return ast.NewBooleanData(left_val != right_val), nil
+				}
+			case ">":
+				if left_val, err := left.ValueAsFloat(); err != nil {
+					return nil, err
+				} else if right_val, err := right.ValueAsFloat(); err != nil {
+					return nil, err
+				} else {
+					return ast.NewBooleanData(left_val > right_val), nil
+				}
+			case "<":
+				if left_val, err := left.ValueAsFloat(); err != nil {
+					return nil, err
+				} else if right_val, err := right.ValueAsFloat(); err != nil {
+					return nil, err
+				} else {
+					return ast.NewBooleanData(left_val < right_val), nil
+				}
 			}
 			if result-math.Trunc(result) != 0 {
 				return ast.NewFloatData(result), nil

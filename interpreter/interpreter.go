@@ -45,6 +45,14 @@ func (i *Interpreter) Interpret(node ast.AST) (ast.Data, error) {
 		} else {
 			result := 0.0
 			switch v.Operator {
+			case "&":
+				if left_val, err := left.ValueAsString(); err != nil {
+					return nil, err
+				} else if right_val, err := right.ValueAsString(); err != nil {
+					return nil, err
+				} else {
+					return ast.NewStringData(left_val + right_val), nil
+				}
 			case "+":
 				if left_val, err := left.ValueAsFloat(); err != nil {
 					return nil, err

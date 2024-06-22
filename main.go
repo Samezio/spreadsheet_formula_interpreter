@@ -11,7 +11,6 @@ import (
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
-
 	basic_interpreter := interpreter.Interpreter{}
 	fmt.Print(">>")
 	for scanner.Scan() {

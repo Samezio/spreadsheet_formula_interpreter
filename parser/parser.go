@@ -24,7 +24,7 @@ type parseState struct {
 }
 
 func (p *parseState) ParseExpression() (ast.AST, error) {
-	return p.parseTerm4()
+	return p.parseTerm5()
 }
 func (p *parseState) skipWhiteSpaces() {
 	for p.currentToken != nil && p.currentToken.Type == SPECIAL && p.currentToken.Token == " " {
@@ -42,6 +42,29 @@ func (p *parseState) consume(ttype ParseTokenType) error {
 	p.skipWhiteSpaces()
 
 	return nil
+}
+func (p *parseState) parseTerm5() (ast.AST, error) { //Inequalities
+	left, err := p.parseTerm4()
+	if err != nil {
+		return nil, err
+	}
+	for p.currentToken != nil && p.currentToken.Type == SPECIAL && p.currentToken.Token == "&" {
+		operator := p.currentToken.Token
+		err = p.consume(SPECIAL)
+		if err != nil {
+			return nil, err
+		}
+		right, err := p.parseTerm4()
+		if err != nil {
+			return nil, err
+		}
+		left = &ast.BinaryOperator_AST{
+			Operator: operator,
+			Left:     left,
+			Right:    right,
+		}
+	}
+	return left, nil
 }
 func (p *parseState) parseTerm4() (ast.AST, error) { //Inequalities
 	left, err := p.parseTerm3()

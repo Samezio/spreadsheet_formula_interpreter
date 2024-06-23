@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 
 	"github.com/Samezio/spreadsheet_formula_interpreter/ast"
@@ -215,6 +216,16 @@ func (p *parseState) factor() (ast.AST, error) {
 				return nil, err
 			} else {
 				return exp, nil
+			}
+		} else if match, err := regexp.MatchString("(\\w+\\d+)", p.currentToken.Token); err != nil { //TODO: correct it
+			return nil, err
+		} else if match {
+			if cell_ast, err := ast.NewCellAST(p.currentToken.Token); err != nil {
+				return nil, err
+			} else if err := p.consume(SPECIAL); err != nil {
+				return nil, err
+			} else {
+				return cell_ast, nil
 			}
 		}
 	}

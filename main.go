@@ -24,11 +24,11 @@ func main() {
 			break
 		}
 		if a, err := parser.Parse(exp); err != nil {
-			fmt.Println(err)
+			fmt.Printf("Error occured: %v\n", err)
 		} else if data, err := basic_interpreter.Interpret(a, retriveCelldata); err != nil {
-			fmt.Println(err)
+			fmt.Printf("Error occured: %v\n", err)
 		} else {
-			fmt.Println(data.Value())
+			fmt.Printf("Result: %v\n", data.Value())
 		}
 		fmt.Print(">>")
 	}

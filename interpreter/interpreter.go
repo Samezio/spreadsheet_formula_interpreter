@@ -94,9 +94,14 @@ func (i *Interpreter) Interpret(node ast.AST, retriveCelldata RetriveCelldata) (
 					result = left_val / right_val
 				}
 			case "==":
-				if left_val, err := left.ValueAsFloat(); err != nil {
+				if left_val, err := left.ValueAsFloat(); err == nil {
+					if right_val, err := right.ValueAsFloat(); err == nil {
+						return ast.NewBooleanData(left_val == right_val), nil
+					}
+				}
+				if left_val, err := left.ValueAsString(); err != nil {
 					return nil, err
-				} else if right_val, err := right.ValueAsFloat(); err != nil {
+				} else if right_val, err := right.ValueAsString(); err != nil {
 					return nil, err
 				} else {
 					return ast.NewBooleanData(left_val == right_val), nil
@@ -118,9 +123,14 @@ func (i *Interpreter) Interpret(node ast.AST, retriveCelldata RetriveCelldata) (
 					return ast.NewBooleanData(left_val <= right_val), nil
 				}
 			case "!=":
-				if left_val, err := left.ValueAsFloat(); err != nil {
+				if left_val, err := left.ValueAsFloat(); err == nil {
+					if right_val, err := right.ValueAsFloat(); err == nil {
+						return ast.NewBooleanData(left_val != right_val), nil
+					}
+				}
+				if left_val, err := left.ValueAsString(); err != nil {
 					return nil, err
-				} else if right_val, err := right.ValueAsFloat(); err != nil {
+				} else if right_val, err := right.ValueAsString(); err != nil {
 					return nil, err
 				} else {
 					return ast.NewBooleanData(left_val != right_val), nil

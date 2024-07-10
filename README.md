@@ -23,6 +23,10 @@ Spreadsheet Formula Interpreter is a tool designed to parse and evaluate arithme
   - Multiplication (`*`)
   - Division (`/`)
   - Brackets for operation precedence (`()`)
+  - String concatenation  (`&`)
+  - Equality (`==` and `!=`)
+  - Comparision (`>`, `<`, `>=`, `<=`)
+  - Cell reference (`column``row` eg `A1`, `XA123`): You'll need to provide `RetriveCelldata`([Refer](interpreter/interpreter.go)) to the interpreter to fetch the value. This test version gives 1 for all cells
 
 ## Running
 
@@ -42,5 +46,9 @@ To use the Spreadsheet Formula Interpreter, follow these steps:
     ```
     go run .
     ```
+4. Write your expression
+
+## Exmaple
+
 ## License
 [License](LICENSE)

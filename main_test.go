@@ -8,10 +8,11 @@ import (
 	"github.com/Samezio/spreadsheet_formula_interpreter/parser"
 )
 
-var basic_interpreter = interpreter.Interpreter{}
-
 var retriveCelldata = func(column string, row int) (ast.CellData, error) {
 	return ast.NewCellData("1"), nil
+}
+var basic_interpreter = interpreter.Interpreter{
+	RetriveCelldata: retriveCelldata,
 }
 
 // TestHelloName calls greetings.Hello with a name, checking
@@ -35,9 +36,9 @@ func TestArithmaticExpression(t *testing.T) {
 	// The execution loop
 	for _, tt := range tests {
 		t.Run(tt.expression, func(t *testing.T) {
-			if a, err := parser.Parse(tt.expression); err != nil {
+			if a, err := parser.Parse(tt.expression, make(parser.FunctionRegistry)); err != nil {
 				t.Errorf("Error occured[%s]: %v\n", tt.expression, err)
-			} else if data, err := basic_interpreter.Interpret(a, retriveCelldata); err != nil {
+			} else if data, err := basic_interpreter.Interpret(a); err != nil {
 				t.Errorf("Error occured[%s]: %v, %v\n", tt.expression, err, ast.AST_ToString(a, 0))
 			} else {
 				switch tt.result_type {

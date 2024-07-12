@@ -11,18 +11,20 @@ type RetriveCelldata func(string, int) (ast.CellData, error)
 
 // Abstract interpreter
 type AbstractInterpreter interface {
-	Interpret(ast ast.AST, retriveCelldata RetriveCelldata) (ast.Data, error)
+	Interpret(ast ast.AST) (ast.Data, error)
 }
 
-type Interpreter struct{}
+type Interpreter struct {
+	RetriveCelldata RetriveCelldata
+}
 
-func (i *Interpreter) Interpret(node ast.AST, retriveCelldata RetriveCelldata) (ast.Data, error) {
+func (i *Interpreter) Interpret(node ast.AST) (ast.Data, error) {
 	//visitor pattern
 	switch v := node.(type) {
 	case ast.Data:
 		return v, nil
 	case *ast.UnaryOperator_AST:
-		if operand, err := i.Interpret(v.Operand, retriveCelldata); err != nil {
+		if operand, err := i.Interpret(v.Operand); err != nil {
 			return nil, err
 		} else if operand == nil {
 			return nil, fmt.Errorf("operand node of unary operation is nil")
@@ -36,15 +38,15 @@ func (i *Interpreter) Interpret(node ast.AST, retriveCelldata RetriveCelldata) (
 			return ast.NewIntegerData(int(value)), nil
 		}
 	case *ast.Cell_AST:
-		if cell_data, err := retriveCelldata(v.Column, v.Row); err != nil {
+		if cell_data, err := i.RetriveCelldata(v.Column, v.Row); err != nil {
 			return nil, err
 		} else {
 			return &cell_data, nil
 		}
 	case *ast.BinaryOperator_AST:
-		if left, err := i.Interpret(v.Left, retriveCelldata); err != nil {
+		if left, err := i.Interpret(v.Left); err != nil {
 			return nil, err
-		} else if right, err := i.Interpret(v.Right, retriveCelldata); err != nil {
+		} else if right, err := i.Interpret(v.Right); err != nil {
 			return nil, err
 		} else if left == nil {
 			return nil, fmt.Errorf("left node of binary operation is nil")
@@ -157,6 +159,8 @@ func (i *Interpreter) Interpret(node ast.AST, retriveCelldata RetriveCelldata) (
 			}
 			return ast.NewIntegerData(int(result)), nil
 		}
+	case Function:
+		return v.Solve(i)
 	default:
 		return nil, fmt.Errorf("invalid ast for interpretation: %v", node)
 	}

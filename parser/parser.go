@@ -8,12 +8,14 @@ import (
 	"github.com/Samezio/spreadsheet_formula_interpreter/ast"
 )
 
-func Parse(expression string) (ast.AST, error) {
+func Parse(expression string, functionRegistry FunctionRegistry) (ast.AST, error) {
 	parseState := parseState{
 		tokeniser: Tokeniser{
 			getLex:       NewLexer(expression),
 			currentLex:   nil,
-			currentToken: nil},
+			currentToken: nil,
+		},
+		functionRegistry: functionRegistry,
 	}
 	parseState.currentToken = parseState.tokeniser.Next()
 	parseState.skipWhiteSpaces()
@@ -21,8 +23,9 @@ func Parse(expression string) (ast.AST, error) {
 }
 
 type parseState struct {
-	tokeniser    Tokeniser
-	currentToken *ParseToken
+	tokeniser        Tokeniser
+	currentToken     *ParseToken
+	functionRegistry FunctionRegistry
 }
 
 func (p *parseState) ParseExpression() (ast.AST, error) {
@@ -227,6 +230,41 @@ func (p *parseState) factor() (ast.AST, error) {
 				return nil, err
 			} else {
 				return cell_ast, nil
+			}
+		} else if function_creator, ok := p.functionRegistry[p.currentToken.Token]; ok {
+			if err := p.consume(SPECIAL); err != nil {
+				return nil, err
+			}
+			if p.currentToken != nil && p.currentToken.Token == "(" {
+				if err := p.consume(SPECIAL); err != nil {
+					return nil, err
+				} else {
+					parameters := make([]ast.AST, 0)
+					if exp, err := p.ParseExpression(); err != nil {
+						return nil, err
+					} else {
+						parameters = append(parameters, exp)
+					}
+					for p.currentToken != nil && p.currentToken.Type == SPECIAL && p.currentToken.Token == "," {
+						if err := p.consume(SPECIAL); err != nil { //Closing
+							return nil, err
+						}
+						if exp, err := p.ParseExpression(); err != nil {
+							return nil, err
+						} else {
+							parameters = append(parameters, exp)
+						}
+					}
+					if p.currentToken != nil && p.currentToken.Token != ")" {
+						return nil, fmt.Errorf("expecting ')'")
+					} else if err := p.consume(SPECIAL); err != nil { //Closing
+						return nil, err
+					} else {
+						return function_creator(&parameters), nil
+					}
+				}
+			} else {
+				return nil, fmt.Errorf("expecting '('")
 			}
 		}
 	}

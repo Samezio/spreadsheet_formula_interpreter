@@ -1,25 +1,29 @@
-package parser
+package parser_test
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/Samezio/spreadsheet_formula_interpreter/parser"
+)
 
 func TestExpression(t *testing.T) {
 	expression := " 123 & \"abc\" == 100+23&'abc'"
-	tokeniser := NewTokeniser(expression)
+	tokeniser := parser.NewTokeniser(expression)
 
-	expectedTokens := []ParseToken{
-		{Token: "123", Type: INTEGER},
-		{Token: " ", Type: SPECIAL},
-		{Token: "&", Type: SPECIAL},
-		{Token: " ", Type: SPECIAL},
-		{Token: "abc", Type: STRING},
-		{Token: " ", Type: SPECIAL},
-		{Token: "==", Type: SPECIAL},
-		{Token: " ", Type: SPECIAL},
-		{Token: "100", Type: INTEGER},
-		{Token: "+", Type: SPECIAL},
-		{Token: "23", Type: INTEGER},
-		{Token: "&", Type: SPECIAL},
-		{Token: "abc", Type: STRING},
+	expectedTokens := []parser.ParseToken{
+		{Token: "123", Type: parser.INTEGER},
+		{Token: " ", Type: parser.SPECIAL},
+		{Token: "&", Type: parser.SPECIAL},
+		{Token: " ", Type: parser.SPECIAL},
+		{Token: "abc", Type: parser.STRING},
+		{Token: " ", Type: parser.SPECIAL},
+		{Token: "==", Type: parser.SPECIAL},
+		{Token: " ", Type: parser.SPECIAL},
+		{Token: "100", Type: parser.INTEGER},
+		{Token: "+", Type: parser.SPECIAL},
+		{Token: "23", Type: parser.INTEGER},
+		{Token: "&", Type: parser.SPECIAL},
+		{Token: "abc", Type: parser.STRING},
 	}
 
 	for _, expectedToken := range expectedTokens {

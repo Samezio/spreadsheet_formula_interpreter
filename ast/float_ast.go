@@ -27,3 +27,6 @@ func (ast *Float_AST) ValueAsBoolean() (bool, error) {
 func NewFloatData(value float64) Data {
 	return &Float_AST{value: value}
 }
+func NewFloatAST(value float64) AST {
+	return &Float_AST{value: value}
+}

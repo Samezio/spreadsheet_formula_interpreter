@@ -38,3 +38,6 @@ func (ast *Boolean_AST) ValueAsBoolean() (bool, error) {
 func NewBooleanData(value bool) Data {
 	return &Boolean_AST{value: value}
 }
+func NewBooleanAST(value bool) AST {
+	return &Boolean_AST{value: value}
+}

@@ -28,3 +28,6 @@ func (ast *Integer_AST) ValueAsBoolean() (bool, error) {
 func NewIntegerData(value int) Data {
 	return &Integer_AST{value: value}
 }
+func NewIntegerAST(value int) AST {
+	return &Integer_AST{value: value}
+}

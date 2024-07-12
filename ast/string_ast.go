@@ -39,3 +39,6 @@ func (ast *String_AST) ValueAsBoolean() (bool, error) {
 func NewStringData(value string) Data {
 	return &String_AST{value: value}
 }
+func NewStringAST(value string) AST {
+	return &String_AST{value: value}
+}

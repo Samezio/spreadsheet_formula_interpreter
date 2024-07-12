@@ -49,6 +49,9 @@ func getType(myvar interface{}) string {
 	return valueOf.Type().Name()
 }
 func AST_ToString(ast AST, numTabs int) string {
+	if ast == nil {
+		return strings.Repeat("\t", numTabs) + "[NIL]"
+	}
 	s := strings.Repeat("\t", numTabs) + getType(ast)
 	switch v := ast.(type) {
 	case Data:

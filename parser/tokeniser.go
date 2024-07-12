@@ -26,6 +26,12 @@ type Tokeniser struct {
 	currentToken *ParseToken
 }
 
+func NewTokeniser(expression string) Tokeniser {
+	return Tokeniser{
+		getLex:       NewLexer(expression),
+		currentLex:   nil,
+		currentToken: nil}
+}
 func (t *Tokeniser) HasNext() bool {
 	if t.currentToken == nil {
 		t.Next()
@@ -84,6 +90,7 @@ func (t *Tokeniser) Next() *ParseToken {
 					Token: ">",
 					Type:  SPECIAL,
 				}
+				return t.currentToken
 			}
 		} else if t.currentLex.Token == "<" {
 			t.currentLex = t.getLex()
@@ -97,6 +104,7 @@ func (t *Tokeniser) Next() *ParseToken {
 					Token: "<",
 					Type:  SPECIAL,
 				}
+				return t.currentToken
 			}
 		} else if t.currentLex.Token == "!" {
 			t.currentLex = t.getLex()
@@ -110,6 +118,7 @@ func (t *Tokeniser) Next() *ParseToken {
 					Token: "!",
 					Type:  SPECIAL,
 				}
+				return t.currentToken
 			}
 		} else if t.currentLex.Token == "=" {
 			t.currentLex = t.getLex()
@@ -123,12 +132,13 @@ func (t *Tokeniser) Next() *ParseToken {
 					Token: "=",
 					Type:  SPECIAL,
 				}
+				return t.currentToken
 			}
 		} else if t.currentLex.Token == "\"" || t.currentLex.Token == "'" { //String
 			quote := t.currentLex.Token
 			t.currentLex = t.getLex()
 			s := ""
-			//Implement excape operator
+			//Implement escape operator
 			for ; t.currentLex != nil && (t.currentLex.Token != quote || t.currentLex.Type != SPECIAL_LEX); t.currentLex = t.getLex() {
 				s += t.currentLex.Token
 			}

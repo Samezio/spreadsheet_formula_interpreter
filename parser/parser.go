@@ -16,6 +16,7 @@ func Parse(expression string) (ast.AST, error) {
 			currentToken: nil},
 	}
 	parseState.currentToken = parseState.tokeniser.Next()
+	parseState.skipWhiteSpaces()
 	return parseState.ParseExpression()
 }
 
@@ -49,7 +50,7 @@ func (p *parseState) parseTerm5() (ast.AST, error) { //Inequalities
 	if err != nil {
 		return nil, err
 	}
-	for p.currentToken != nil && p.currentToken.Type == SPECIAL && p.currentToken.Token == "&" {
+	for p.currentToken != nil && p.currentToken.Type == SPECIAL && (p.currentToken.Token == ">=" || p.currentToken.Token == "<=" || p.currentToken.Token == ">" || p.currentToken.Token == "<") {
 		operator := p.currentToken.Token
 		err = p.consume(SPECIAL)
 		if err != nil {
@@ -67,12 +68,12 @@ func (p *parseState) parseTerm5() (ast.AST, error) { //Inequalities
 	}
 	return left, nil
 }
-func (p *parseState) parseTerm4() (ast.AST, error) { //Inequalities
+func (p *parseState) parseTerm4() (ast.AST, error) { //Equalities
 	left, err := p.parseTerm3()
 	if err != nil {
 		return nil, err
 	}
-	for p.currentToken != nil && p.currentToken.Type == SPECIAL && (p.currentToken.Token == ">=" || p.currentToken.Token == "<=" || p.currentToken.Token == ">" || p.currentToken.Token == "<") {
+	for p.currentToken != nil && p.currentToken.Type == SPECIAL && (p.currentToken.Token == "==" || p.currentToken.Token == "!=") {
 		operator := p.currentToken.Token
 		err = p.consume(SPECIAL)
 		if err != nil {
@@ -90,12 +91,12 @@ func (p *parseState) parseTerm4() (ast.AST, error) { //Inequalities
 	}
 	return left, nil
 }
-func (p *parseState) parseTerm3() (ast.AST, error) { //Equalities
+func (p *parseState) parseTerm3() (ast.AST, error) { //Concatenation
 	left, err := p.parseTerm2()
 	if err != nil {
 		return nil, err
 	}
-	for p.currentToken != nil && p.currentToken.Type == SPECIAL && (p.currentToken.Token == "==" || p.currentToken.Token == "!=") {
+	for p.currentToken != nil && p.currentToken.Type == SPECIAL && p.currentToken.Token == "&" {
 		operator := p.currentToken.Token
 		err = p.consume(SPECIAL)
 		if err != nil {
